@@ -7,7 +7,7 @@ import sys
 import time
 import math
 
-jarPath = "C:\\Users\\Solomon Kritz\\Documents\\TwitchPlaysPiano\\Midi.jar"
+jarPath = os.getcwd() + "\\Midi.jar"
 
 def connect_to_channel(channel_name, beatLen):
     #CONFIG
@@ -110,6 +110,9 @@ def connect_to_channel(channel_name, beatLen):
            print("Note: " + note + " Beat: " + str(beat) + " Num: " + str(num))
            os.system('java -jar "' + jarPath + '" "CASIO USB-MIDI" ' + str(num) + ' ' + str(vol) + ' ' + str(beat))
 
+def play_note(num, vol, beat):
+	os.system('java -jar "' + jarPath + '" "CASIO USB-MIDI" ' + str(num) + ' ' + str(vol) + ' ' + str(beat))
+	
 def convert(string):
     parts = string.split(",")
     octave = 0
@@ -135,6 +138,7 @@ def convert(string):
     return 72 + key + 12 * octave + sharp
 
 if __name__ == "__main__":
+    threads = [];
     channel_name = input("Enter a channel name: ")
     beatLen = input("Enter the length of a whole beat (in secs): ")
     connect_to_channel(channel_name, beatLen)
