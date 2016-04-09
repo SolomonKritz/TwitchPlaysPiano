@@ -6,6 +6,8 @@ import traceback
 import sys
 import time
 
+jarPath = "C:\\Users\\Eric\\Dropbox\\TwitchPlaysPiano\\Midi.jar"
+
 def connect_to_channel(channel_name):
     #CONFIG
     CHANNEL_NAME = channel_name
@@ -53,9 +55,9 @@ def connect_to_channel(channel_name):
               break
         if (note is not ""):
            num = convert(note)
+           os.system('java -jar ' + jarPath + ' "CASIO USB-MIDI" ' + str(num) + ' 127 ' + str(beatLen * 400))
            print(note)
            print(num)
-        time.sleep(beatLen)
 
 def convert(string):
     parts = string.split(",")
