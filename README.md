@@ -4,7 +4,11 @@ Source code for the TwitchPlaysAPiano bot. See twitch.tv/twitchplaysapiano for t
 
 Authors:
 Vincent Choo
+
 SaiArvind Ganganapalle
+
 Eric Goren
+
 David Liang
+
 Solomon Kritz
