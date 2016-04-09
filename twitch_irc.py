@@ -5,10 +5,11 @@ import random
 import traceback
 import sys
 import time
+import math
 
-jarPath = "C:\\Users\\Eric\\Dropbox\\TwitchPlaysPiano\\Midi.jar"
+jarPath = "C:\\Users\\Solomon Kritz\\Documents\\TwitchPlaysPiano\\Midi.jar"
 
-def connect_to_channel(channel_name):
+def connect_to_channel(channel_name, beatLen):
     #CONFIG
     CHANNEL_NAME = channel_name
     CHANNEL_NAME = CHANNEL_NAME.lower()
@@ -23,19 +24,18 @@ def connect_to_channel(channel_name):
     s.send("PASS {}\r\n".format(PASS).encode("utf-8"))
     s.send("NICK {}\r\n".format(nick).encode("utf-8"))
     s.send("JOIN {}\r\n".format(IRC_CHANNEL).encode("utf-8"))
-
-    beatLen = 1
+    beatLen = int(beatLen)
     i = 1
-    for i in range(12):
+    for i in range(3):
         response = s.recv(1024).decode("utf-8")
-    
+        
     while True:
+        beat = "";
         note = ""
         mode = 0
         response = s.recv(1024).decode("utf-8")
         note = response.split(":")[2]
         response = note
-        print(response)
         note = ""
         for char in response:
            if ((((ord(char) >= 65) and (ord(char) <= 71)) or ((ord(char) >= 97) and (ord(char) <= 103))) and (mode == 0)):
@@ -43,21 +43,46 @@ def connect_to_channel(channel_name):
               mode = 1
            elif ((mode == 1) and (ord(char) >= 49) and (ord(char) <= 51)):
               note = note + ',' + char
-              break
+              mode = 3
            elif ((mode == 1) and (ord(char) == 45)):
               note = note + ',' + char
               mode = 2
            elif ((mode == 2) and (ord(char) >= 49) and (ord(char) <= 51)):
               note = note + char
+              mode = 3
+           elif ((mode == 3 or (mode == 1)) and (ord(char) == 32)):
+              mode = 4
+           elif ((mode == 4) and (ord(char) == 49)):
+              beat = beat + "one"
               break
-           elif ((mode == 1) or (mode == 2)):
-              note = note.replace(",-", "")
+           elif ((mode == 4) and (ord(char) == 46)):
+              mode = 5
+           elif ((mode == 5) and (ord(char) >= 48) and (ord(char) <= 57)):
+              beat = beat + char
+              mode = 6
+           elif ((mode == 6) and (ord(char) >= 48) and (ord(char) <= 57)):
+              beat = beat + char
               break
+        if (len(note) == 3):
+            note = note.replace(",-", "")
+        if (beat is ""):
+            beat = "1"
+            beat = int(beat)
+        elif (beat is "one"):
+            beat = "1"
+            beat = int(beat)
+        else:
+           div = len(beat)
+           beat = int(beat)
+           beat = beat / 1.0
+           beat = beat / pow(10, div)
         if (note is not ""):
            num = convert(note)
-           os.system('java -jar ' + jarPath + ' "CASIO USB-MIDI" ' + str(num) + ' 127 ' + str(beatLen * 400))
-           print(note)
-           print(num)
+           beat = (beatLen*1000*beat)
+           if ("." in str(beat)):
+               beat = str(beat).split(".")[0]
+           print("Note: " + note + " Beat: " + str(beat))
+           os.system('java -jar "' + jarPath + '" "CASIO USB-MIDI" ' + str(num) + ' 127 ' + str(beat))
 
 def convert(string):
     parts = string.split(",")
@@ -85,4 +110,5 @@ def convert(string):
 
 if __name__ == "__main__":
     channel_name = input("Enter a channel name: ")
-    connect_to_channel(channel_name)
+    beatLen = input("Enter the length of a whole beat (in secs): ")
+    connect_to_channel(channel_name, beatLen)
