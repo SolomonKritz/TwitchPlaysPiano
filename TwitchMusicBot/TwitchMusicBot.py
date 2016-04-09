@@ -37,17 +37,19 @@ def connect_to_channel(channel_name, music_file):
                 continue
             elif line_number == 2:
                 beat_length = float(line)
+                send_message(s, IRC_CHANNEL, '!beat ' + str(beat_length))
+                time.sleep(1)
                 # send_message(s, IRC_CHANNEL, 'I shall now play ' + music_name)
                 # time.sleep(7)
 
                 continue
             for note in line.split(" "):
                 print(note)
-                send_message(s, IRC_CHANNEL, note)
+                send_message(s, IRC_CHANNEL, note.rstrip())
                 note_length = 1
                 if ';' in note:
                     note_length = float(note.split(';')[1])
-                time.sleep(beat_length * note_length * 1.4)
+                time.sleep(beat_length * note_length * 1.6)
 
 
 if __name__ == "__main__":
