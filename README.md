@@ -22,7 +22,7 @@ Note that this currently only works locally with a real keyboard, and has only b
 
 ###Other Commands
 * To change the volume to 100, type **"!vol 100"**. The allowed range is between 0 and 127.
-* To double the default time a note is played, type **"!beat 2"**. There is an upper limit on this command to prevent excessively long notes from being played.
+* To change the default time a note is played to 2 seconds, type **"!beat 2"**. There is an upper limit on this command to prevent excessively long notes from being played.
 
 ##Credits and Thanks:
 ###Authors:
