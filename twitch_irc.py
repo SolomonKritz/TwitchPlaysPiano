@@ -84,7 +84,7 @@ def connect_to_channel(channel_name, beatLen):
            beat = (beatLen*1000*beat)
            if ("." in str(beat)):
                beat = str(beat).split(".")[0]
-           print("Note: " + note + " Beat: " + str(beat))
+           print("Note: " + note + " Beat: " + str(beat) + " Num: " + str(num))
            os.system('java -jar "' + jarPath + '" "CASIO USB-MIDI" ' + str(num) + ' 127 ' + str(beat))
 
 def convert(string):
