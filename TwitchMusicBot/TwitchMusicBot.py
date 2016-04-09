@@ -25,7 +25,7 @@ def connect_to_channel(channel_name, music_file):
     s.send("PASS {}\r\n".format(PASS).encode("utf-8"))
     s.send("NICK {}\r\n".format(nick).encode("utf-8"))
     s.send("JOIN {}\r\n".format(IRC_CHANNEL).encode("utf-8"))
-    send_message(s, IRC_CHANNEL, 'Piano bot has arrived to serenade your heart && soul')
+    # send_message(s, IRC_CHANNEL, 'Piano bot has arrived to serenade your heart && soul')
     line_number = 0
     music_name = 0
     beat_length = 1
@@ -36,14 +36,18 @@ def connect_to_channel(channel_name, music_file):
                 music_name = line
                 continue
             elif line_number == 2:
-                beat_length = int(line)
-                send_message(s, IRC_CHANNEL, 'I shall now play ' + music_name)
+                beat_length = float(line)
+                # send_message(s, IRC_CHANNEL, 'I shall now play ' + music_name)
+                # time.sleep(7)
 
                 continue
             for note in line.split(" "):
                 print(note)
                 send_message(s, IRC_CHANNEL, note)
-                time.sleep(beat_length * float(note.split(";")[1]))
+                note_length = 1
+                if ';' in note:
+                    note_length = float(note.split(';')[1])
+                time.sleep(beat_length * note_length * 1.4)
 
 
 if __name__ == "__main__":
