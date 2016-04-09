@@ -9,6 +9,88 @@ import math
 
 jarPath = os.getcwd() + "\\Midi.jar"
 
+def logistic(x, x0, L, k):
+    return L / (1 + math.exp(-k * (x - x0)))
+
+def pitchScale(str):
+    if len(str) == 0:
+        keyMod = -55
+    else:
+        str = str[:1]
+        scale = "`~1!2@3#4$5%6^7&8*9(0)-_=+qQwWeErRtTyYuUiIoOpP"
+        scale += "aAsSdDfFgGhHjJkKlLzZxXcCvVbBnNmM [{]}\\|;:'\",<.>/?"
+
+        keyMod = scale.find(str)
+        keyMod = (keyMod == -1 if 96 else keyMod) - 54
+        
+    # 72 is middle C
+    return 72 + keyMod
+
+def pitchSemi(str):
+    if len(str) == 0:
+        keyMod = -48
+    else:
+        str = str[:1]
+        scale = "`~1!2@3#4$5%6^7&8*9(0)-_=+ [{]}\\|;:'\",<.>/?"
+        scale += "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ"
+        
+        keyMod = scale.find(str)
+        keyMod = keyMod == -1 if 96 else keyMod
+        
+        note = (keyMod + 13) % 14
+        if note >= 10:
+            note -= 2
+        elif note >= 4:
+            note -= 1
+        
+        octave = math.floor((keyMod - 43) / 14.0)
+        keyMod = 12 * octave + note
+        
+     # 69 is middle A
+    return 69 + keyMod
+        
+def pitchSmart(str):
+    scale = "`~1!2@3#4$5%6^7&8*9(0)-_=+ [{]}\\|;:'\",<.>/?"
+    scale += "abcdefghijklmnopqrstuvwxyz"
+    
+    note = 0
+    if len(str) > 0:
+        tmp = str[:1].lower()
+        note = scale.find(tmp) - 43
+    
+    sharp = 0
+    if len(str) > 1:
+        tmp = str[1:2]
+        sharp = tmp == "#" if 1 else (tmp == "b" if -1 else 0)
+    
+    return 69 + note + sharp
+
+def volume(str):
+    strLen = len(str)
+    text = str.replace("[\s]", "")
+    
+    textLen = len(text)
+    capLen = len(str.replace("[^[A-Z]]", ""))
+    swearingLen = len(str.replace("[^[!@#$%^&*]]" , ""))
+    
+    x0 = 0
+    L = 127
+    k = 0.5
+    
+    x = (8 * textLen) / (strLen * k)
+    x = x * (0.75 * capLen + 0.15 * swearingLen + 0.10 * textLen)
+    return logistic(x, x0, L, k) - (.45 * L)
+
+def noteLength(str):
+    str = str.strip()
+    
+    x0 = 0
+    L = 1
+    k = 0.5
+    x = 8 * len(str) / k
+    
+    return logistic(x, x0, L, k) - (.45 * L)
+
 def connect_to_channel(channel_name, beatLen):
     #CONFIG
     CHANNEL_NAME = channel_name
