@@ -1,5 +1,5 @@
 # TwitchPlaysPiano
-
+![GitHub Logo](/images/tpp.png)  
 Source code for the TwitchPlaysAPiano bot. See twitch.tv/twitchplaysapiano and visit our setup to see the code in action!
 
 ##Overview
