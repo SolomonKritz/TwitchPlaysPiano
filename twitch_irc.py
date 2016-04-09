@@ -24,8 +24,11 @@ def connect_to_channel(channel_name, beatLen):
     s.send("PASS {}\r\n".format(PASS).encode("utf-8"))
     s.send("NICK {}\r\n".format(nick).encode("utf-8"))
     s.send("JOIN {}\r\n".format(IRC_CHANNEL).encode("utf-8"))
+
+    vol = 127
     beatLen = float(beatLen)
     i = 1
+    
     for i in range(3):
         response = s.recv(1024).decode("utf-8")
         
@@ -38,6 +41,26 @@ def connect_to_channel(channel_name, beatLen):
         note = response.split(":")[2]
         response = note
         note = ""
+        if (("!" in response) and (" "  in response)):
+           if (response.split(" ")[0] == "!beat"):
+              try:
+                 beatLen = float(response.split(" ")[1])
+                 if (beatLen > 4):
+                     beatLen = 4
+                 continue
+              except:
+                 pass
+        if (("!" in response) and (" "  in response)):
+           if (response.split(" ")[0] == "!vol"):
+              try:
+                 vol = int(response.split(" ")[1])
+                 if (vol > 127):
+                     vol = 127
+                 if (vol < 0):
+                     vol = 0
+                 continue
+              except:
+                 pass
         for char in response:
            if ((((ord(char) >= 65) and (ord(char) <= 71)) or ((ord(char) >= 97) and (ord(char) <= 103))) and (mode == 0)):
               note = char
@@ -68,10 +91,10 @@ def connect_to_channel(channel_name, beatLen):
               break        
         if (len(note) == 3):
             note = note.replace(",-", "")
-        if (beat is ""):
+        if (beat == ""):
             beat = "1"
             beat = int(beat)
-        elif (beat is "one"):
+        elif (beat == "one"):
             beat = "1"
             beat = int(beat)
         else:
@@ -79,13 +102,13 @@ def connect_to_channel(channel_name, beatLen):
            beat = int(beat)
            beat = beat / 1.0
            beat = beat / pow(10, div)
-        if (note is not ""):
+        if (note != ""):
            num = convert(note)
            beat = (beatLen*1000*beat)
            if ("." in str(beat)):
                beat = str(beat).split(".")[0]
            print("Note: " + note + " Beat: " + str(beat) + " Num: " + str(num))
-           os.system('java -jar "' + jarPath + '" "CASIO USB-MIDI" ' + str(num) + ' 127 ' + str(beat))
+           os.system('java -jar "' + jarPath + '" "CASIO USB-MIDI" ' + str(num) + ' ' + str(vol) + ' ' + str(beat))
 
 def convert(string):
     parts = string.split(",")
