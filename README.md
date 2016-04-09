@@ -34,6 +34,6 @@ Solomon Kritz
 
 ###Special Thanks:
 BitCamp  
-The University of Maryland  
-MLH 
+The University of Maryland, College Park    
+MLH   
 All the mentors!  
