@@ -22,10 +22,14 @@ def connect_to_channel(channel_name):
     s.send("NICK {}\r\n".format(nick).encode("utf-8"))
     s.send("JOIN {}\r\n".format(IRC_CHANNEL).encode("utf-8"))
 
+    i = 1
+    for i in range(12):
+        response = s.recv(1024).decode("utf-8")
+    
     while True:
         note = ""
-        response = s.recv(1024).decode("utf-8")    
         mode = 0
+        response = s.recv(1024).decode("utf-8")
         note = response.split(":")[2]
         response = note
         note = ""
@@ -34,16 +38,16 @@ def connect_to_channel(channel_name):
               note = char
               mode = 1
            elif ((mode == 1) and (ord(char) >= 49) and (ord(char) <= 51)):
-              note = note + char
+              note = note + ',' + char
               break
            elif ((mode == 1) and (ord(char) == 45)):
-              note = note + char
+              note = note + ',' + char
               mode = 2
            elif ((mode == 2) and (ord(char) >= 49) and (ord(char) <= 51)):
               note = note + char
               break
            elif ((mode == 1) or (mode == 2)):
-              note = note.replace("-", "")
+              note = note.replace(",-", "")
               break
         if (note is not ""):
            print(note)
