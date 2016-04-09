@@ -24,7 +24,7 @@ def connect_to_channel(channel_name, beatLen):
     s.send("PASS {}\r\n".format(PASS).encode("utf-8"))
     s.send("NICK {}\r\n".format(nick).encode("utf-8"))
     s.send("JOIN {}\r\n".format(IRC_CHANNEL).encode("utf-8"))
-    beatLen = int(beatLen)
+    beatLen = float(beatLen)
     i = 1
     for i in range(3):
         response = s.recv(1024).decode("utf-8")
@@ -34,6 +34,7 @@ def connect_to_channel(channel_name, beatLen):
         note = ""
         mode = 0
         response = s.recv(1024).decode("utf-8")
+        print(response)
         note = response.split(":")[2]
         response = note
         note = ""
@@ -50,7 +51,7 @@ def connect_to_channel(channel_name, beatLen):
            elif ((mode == 2) and (ord(char) >= 49) and (ord(char) <= 51)):
               note = note + char
               mode = 3
-           elif ((mode == 3 or (mode == 1)) and (ord(char) == 32)):
+           elif ((mode == 3 or (mode == 1)) and (ord(char) == 59)):
               mode = 4
            elif ((mode == 4) and (ord(char) == 49)):
               beat = beat + "one"
@@ -63,6 +64,8 @@ def connect_to_channel(channel_name, beatLen):
            elif ((mode == 6) and (ord(char) >= 48) and (ord(char) <= 57)):
               beat = beat + char
               break
+           elif (mode == 1):
+              break        
         if (len(note) == 3):
             note = note.replace(",-", "")
         if (beat is ""):
