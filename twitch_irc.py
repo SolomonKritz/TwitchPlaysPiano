@@ -4,7 +4,7 @@ import os
 import random
 import traceback
 import sys
-#import sleep
+import time
 
 def connect_to_channel(channel_name):
     #CONFIG
@@ -22,6 +22,7 @@ def connect_to_channel(channel_name):
     s.send("NICK {}\r\n".format(nick).encode("utf-8"))
     s.send("JOIN {}\r\n".format(IRC_CHANNEL).encode("utf-8"))
 
+    beatLen = 1
     i = 1
     for i in range(12):
         response = s.recv(1024).decode("utf-8")
@@ -32,6 +33,7 @@ def connect_to_channel(channel_name):
         response = s.recv(1024).decode("utf-8")
         note = response.split(":")[2]
         response = note
+        print(response)
         note = ""
         for char in response:
            if ((((ord(char) >= 65) and (ord(char) <= 71)) or ((ord(char) >= 97) and (ord(char) <= 103))) and (mode == 0)):
@@ -51,7 +53,7 @@ def connect_to_channel(channel_name):
               break
         if (note is not ""):
            print(note)
-        #sleep(0.1)
+        time.sleep(beatLen)
 
 if __name__ == "__main__":
     channel_name = input("Enter a channel name: ")
