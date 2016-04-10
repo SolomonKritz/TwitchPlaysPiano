@@ -37,7 +37,8 @@ def connect_to_channel(channel_name, beatLen):
         note = ""
         mode = 0
         response = s.recv(1024).decode("utf-8")
-        print(response)
+        if ("PING" in response):
+           continue
         note = response.split(":")[2]
         response = note
         note = ""
@@ -107,7 +108,6 @@ def connect_to_channel(channel_name, beatLen):
            beat = (beatLen*1000*beat)
            if ("." in str(beat)):
                beat = str(beat).split(".")[0]
-           print("Note: " + note + " Beat: " + str(beat) + " Num: " + str(num))
            os.system('java -jar "' + jarPath + '" "CASIO USB-MIDI" ' + str(num) + ' ' + str(vol) + ' ' + str(beat))
 
 def play_note(num, vol, beat):
