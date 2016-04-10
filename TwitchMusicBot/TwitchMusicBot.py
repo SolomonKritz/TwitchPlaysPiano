@@ -15,11 +15,11 @@ def connect_to_channel(channel_name, music_file):
     CHANNEL_NAME = channel_name
     CHANNEL_NAME = CHANNEL_NAME.lower()
     IRC_CHANNEL = "#"+CHANNEL_NAME
-    PASS = "oauth:8csfankwunv7j4a054n4ju9jglubel"
+    PASS = "oauth:8mzl7u6f7l5fhptf1o2miraxcm95l2"
 
     host = "irc.twitch.tv"
     port = 6667
-    nick = "ardvarks96"
+    nick = "twitchpianobot"
     s = socket.socket()
     s.connect((host,port))
     s.send("PASS {}\r\n".format(PASS).encode("utf-8"))
